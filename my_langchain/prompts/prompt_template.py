@@ -40,18 +40,24 @@ class PromptTemplate(BasePromptTemplate):
             validate_template: Whether to validate template
             **kwargs: Additional parameters
         """
-        # Extract input variables if not provided
+        # Initialize partial variables
+        partial_vars = partial_variables or {}
+
+        # Extract all variables from template
+        all_variables = self._extract_variables_from_template(template)
+
+        # Filter out partial variables from input variables
         if input_variables is None:
-            input_variables = self._extract_variables_from_template(template)
+            input_variables = [var for var in all_variables if var not in partial_vars]
+        else:
+            # Ensure provided input_variables don't include partial variables
+            input_variables = [var for var in input_variables if var not in partial_vars]
 
         # Create configuration
         config = PromptTemplateConfig(
             template_format=template_format,
             validate_template=validate_template
         )
-
-        # Initialize partial variables
-        partial_vars = partial_variables or {}
 
         super().__init__(
             template=template,
@@ -161,23 +167,24 @@ class PromptTemplate(BasePromptTemplate):
             # Extract variables from template
             extracted_vars = self._extract_variables()
 
-            # Check if input_variables match extracted variables
-            if set(self.input_variables) != set(extracted_vars):
-                if not self.input_variables:  # If input_variables is empty, use extracted
-                    self.input_variables = extracted_vars
-                else:
-                    raise TemplateValidationError(
-                        f"Input variables {self.input_variables} do not match template variables {extracted_vars}",
-                        self.template,
-                        extracted_vars
-                    )
+            # For PromptTemplate, consider all variables including partial ones
+            all_template_vars = set(extracted_vars)
+            all_expected_vars = set(self.input_variables) | set(self.partial_variables.keys())
+
+            # Check if variables match
+            if all_expected_vars != all_template_vars:
+                raise TemplateValidationError(
+                    f"Template variables {all_template_vars} do not match expected variables {all_expected_vars}",
+                    self.template,
+                    list(all_template_vars)
+                )
 
             # Check template syntax by creating a dummy format string
             template_format = getattr(self.config, 'template_format', 'f-string') if hasattr(self, 'config') else 'f-string'
             if template_format == "f-string":
                 # Create test variables for validation with appropriate types
                 test_vars = {}
-                for var in self.input_variables:
+                for var in all_template_vars:
                     # Use appropriate test values based on common variable names
                     if var.lower() in ['age', 'count', 'number', 'score']:
                         test_vars[var] = 1  # Use integer for numeric variables

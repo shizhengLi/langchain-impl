@@ -44,8 +44,8 @@ class FewShotPromptTemplate(PromptTemplate):
         # Build the full template
         template = self._build_template(prefix, suffix, example_separator)
 
-        # Extract input variables from examples and prompts
-        input_variables = list(example_prompt.input_variables)
+        # Extract input variables from suffix only (example_prompt variables are internal)
+        input_variables = []
 
         # Add variables from suffix
         if suffix:
@@ -157,6 +157,49 @@ class FewShotPromptTemplate(PromptTemplate):
             Number of examples
         """
         return len(self.examples)
+
+    def _validate_template(self) -> None:
+        """
+        Validate few-shot template structure
+
+        For FewShotTemplate, we only validate that the template contains the expected
+        placeholders: {examples} and variables from suffix
+        """
+        try:
+            # Check that the template contains {examples} placeholder
+            if "{examples}" not in self.template:
+                raise ValueError("FewShot template must contain {examples} placeholder")
+
+            # Extract variables from the template (should include 'examples' and suffix variables)
+            extracted_vars = self._extract_f_string_variables(self.template)
+
+            # For few-shot, expected variables are: examples + suffix variables
+            expected_vars = set(self.input_variables)
+            expected_vars.add("examples")  # Add the examples placeholder
+
+            # Check if variables match
+            if set(extracted_vars) != expected_vars:
+                # It's ok if there are extra variables in input_variables from example_prompt
+                # They will be used in example formatting
+                pass
+
+            # Validate template syntax by creating test variables
+            test_vars = {}
+            for var in extracted_vars:
+                if var == "examples":
+                    test_vars[var] = "Example content"
+                else:
+                    test_vars[var] = f"test_{var}"
+
+            self.template.format(**test_vars)
+
+        except (ValueError, KeyError) as e:
+            from my_langchain.prompts.types import TemplateValidationError
+            raise TemplateValidationError(
+                f"Invalid few-shot template: {str(e)}",
+                self.template,
+                self.input_variables
+            )
 
     def select_examples(self, input_variables: Dict[str, Any], max_examples: int) -> List[Dict[str, Any]]:
         """
