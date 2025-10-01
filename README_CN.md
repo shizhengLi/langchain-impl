@@ -1,94 +1,94 @@
-# LangChain Implementation: A Production-Grade Framework for LLM Applications
+# LangChain 实现：生产级大语言模型应用框架
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/Tests-100%25%20Pass-brightgreen.svg)](tests/)
-[![Coverage](https://img.shields.io/badge/Coverage-95%25+-green.svg)](tests/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![测试](https://img.shields.io/badge/测试-100%25%20通过-brightgreen.svg)](tests/)
+[![覆盖率](https://img.shields.io/badge/覆盖率-95%25+-green.svg)](tests/)
+[![许可证](https://img.shields.io/badge/许可证-MIT-yellow.svg)](LICENSE)
 
-> 🚀 **A production-grade implementation of LangChain framework from first principles**, designed for educational purposes and enterprise-level LLM application development.
+> 🚀 **从第一原则实现的生产级LangChain框架**，专为教育目的和企业级大语言模型应用开发而设计。
 
-> 📖 **[中文版文档 (README_CN.md)](README_CN.md)** - 如果您更习惯阅读中文，可以查看详细的中文版本文档。
+> 📖 **[English Version (README.md)](README.md)** - If you prefer to read in English, you can view the detailed English documentation.
 
-## 📋 Table of Contents
+## 📋 目录
 
-- [🎯 Project Overview](#-project-overview)
-- [🏗️ System Architecture](#️-system-architecture)
-- [🔧 Core Components](#-core-components)
-- [🎨 Design Patterns](#-design-patterns)
-- [⚡ Technical Deep Dive](#-technical-deep-dive)
-- [🚀 Quick Start](#-quick-start)
-- [📚 API Reference](#-api-reference)
-- [🧪 Testing Strategy](#-testing-strategy)
-- [🔍 Performance Optimization](#-performance-optimization)
-- [🛠️ Development Guide](#️-development-guide)
-- [📊 Benchmarks](#-benchmarks)
+- [🎯 项目概述](#-项目概述)
+- [🏗️ 系统架构](#️-系统架构)
+- [🔧 核心组件](#-核心组件)
+- [🎨 设计模式](#-设计模式)
+- [⚡ 技术深度解析](#-技术深度解析)
+- [🚀 快速开始](#-快速开始)
+- [📚 API参考](#-api参考)
+- [🧪 测试策略](#-测试策略)
+- [🔍 性能优化](#-性能优化)
+- [🛠️ 开发指南](#️-开发指南)
+- [📊 基准测试](#-基准测试)
 
-## 🎯 Project Overview
+## 🎯 项目概述
 
-This project is a **comprehensive from-scratch implementation** of the LangChain framework, designed to demonstrate deep understanding of LLM application architecture while maintaining production-grade code quality. Unlike simple wrapper implementations, this project builds core abstractions from first principles.
+本项目是LangChain框架的**全面从零实现**，旨在展示对LLM应用架构的深度理解，同时保持生产级代码质量。与简单的包装实现不同，本项目从第一原则构建核心抽象。
 
-### Key Objectives
+### 核心目标
 
-- **🎓 Educational Excellence**: Demonstrate deep understanding of LLM application patterns
-- **🏭 Production Ready**: Enterprise-grade code quality with 100% test coverage
-- **🔧 Extensible Architecture**: Clean abstractions supporting custom components
-- **⚡ Performance Optimized**: Efficient implementations with caching and optimization
-- **📚 Well Documented**: Comprehensive documentation with real-world examples
+- **🎓 教育卓越性**: 展示对LLM应用模式的深度理解
+- **🏭 生产就绪**: 企业级代码质量，100%测试覆盖率
+- **🔧 可扩展架构**: 支持自定义组件的清晰抽象
+- **⚡ 性能优化**: 带有缓存和优化的高效实现
+- **📚 文档完善**: 包含实际示例的全面文档
 
-## 🏗️ System Architecture
+## 🏗️ 系统架构
 
-### High-Level Architecture
+### 高层架构
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        Application Layer                              │
+│                        应用层 (Application Layer)                      │
 ├─────────────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │   Agents    │  │   Chains    │  │   Tools     │  │   Memory    │  │
-│  │  (Orchestration) │  │ (Composition) │  │ (Execution) │  │ (State)    │  │
+│  │   智能体    │  │    链      │  │    工具     │  │    记忆     │  │
+│  │ (编排)      │  │ (组合)      │  │ (执行)      │  │ (状态)      │  │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
 ├─────────────────────────────────────────────────────────────────────┤
-│                       Processing Layer                               │
+│                       处理层 (Processing Layer)                       │
 ├─────────────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │ Retrieval   │  │ Prompts     │  │ Embeddings  │  │ TextSplit   │  │
-│  │  (RAG Core) │  │ (Template)  │  │ (Vector)    │  │ (Chunking)  │  │
+│  │    检索     │  │   提示词    │  │    嵌入     │  │   文本分割  │  │
+│  │ (RAG核心)   │  │ (模板)      │  │ (向量)      │  │ (分块)      │  │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
 ├─────────────────────────────────────────────────────────────────────┤
-│                     Foundation Layer                                 │
+│                     基础层 (Foundation Layer)                       │
 ├─────────────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │    LLMs     │  │ VectorStore │  │    Base     │  │   Types     │  │
-│  │ (Interface) │  │ (Storage)   │  │ (Abstracts) │  │ (Models)    │  │
+│  │   大语言模型 │  │  向量存储   │  │    基类     │  │    类型     │  │
+│  │ (接口)      │  │ (存储)      │  │ (抽象)      │  │ (模型)      │  │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### Architectural Principles
+### 架构原则
 
-1. **Layered Architecture**: Clear separation of concerns with well-defined interfaces
-2. **Dependency Inversion**: High-level modules don't depend on low-level modules
-3. **Composition over Inheritance**: Flexible component composition
-4. **Interface Segregation**: Small, focused interfaces
-5. **Single Responsibility**: Each component has one reason to change
+1. **分层架构**: 清晰的关注点分离和明确定义的接口
+2. **依赖倒置**: 高层模块不依赖低层模块
+3. **组合优于继承**: 灵活的组件组合
+4. **接口隔离**: 小而专注的接口
+5. **单一职责**: 每个组件只有一个变化的理由
 
-## 🔧 Core Components
+## 🔧 核心组件
 
-### 1. Retrieval System (RAG Core)
+### 1. 检索系统 (RAG核心)
 
-The retrieval system is the **crown jewel** of this implementation, featuring multiple advanced retrieval strategies:
+检索系统是本实现的**核心亮点**，具有多种高级检索策略：
 
-#### DocumentRetriever
+#### 文档检索器
 ```python
 class DocumentRetriever(BaseRetriever):
     """
-    Traditional Information Retrieval using TF-IDF, BM25, and Jaccard similarity.
+    使用TF-IDF、BM25和Jaccard相似度的传统信息检索。
 
-    Key Features:
-    - Term frequency analysis with IDF weighting
-    - BM25 scoring with document length normalization
-    - Configurable stop-word filtering
-    - Efficient inverted index structure
+    核心特性：
+    - 带IDF加权的词频分析
+    - 带文档长度归一化的BM25评分
+    - 可配置停用词过滤
+    - 高效倒排索引结构
     """
 
     def __init__(self, config: Optional[RetrievalConfig] = None):
@@ -99,18 +99,18 @@ class DocumentRetriever(BaseRetriever):
         self._total_documents: int = 0
 ```
 
-#### VectorRetriever
+#### 向量检索器
 ```python
 class VectorRetriever(BaseRetriever):
     """
-    Semantic retrieval using dense vector representations.
+    使用密集向量表示的语义检索。
 
-    Key Features:
-    - Multiple embedding model support
-    - MMR (Maximal Marginal Relevance) for diversity
-    - Cosine similarity with score normalization
-    - Embedding caching for performance
-    - Configurable similarity thresholds
+    核心特性：
+    - 多种嵌入模型支持
+    - 用于多样性的MMR（最大边界相关性）
+    - 带分数归一化的余弦相似度
+    - 性能优化的嵌入缓存
+    - 可配置的相似度阈值
     """
 
     def __init__(self,
@@ -122,17 +122,17 @@ class VectorRetriever(BaseRetriever):
         self._vector_store = vector_store
 ```
 
-#### EnsembleRetriever
+#### 集成检索器
 ```python
 class EnsembleRetriever(BaseRetriever):
     """
-    Advanced fusion of multiple retrieval strategies.
+    多种检索策略的高级融合。
 
-    Fusion Strategies:
-    - Weighted Score Fusion: Linear combination of relevance scores
-    - Rank Fusion: Borda count based rank aggregation
-    - Reciprocal Rank Fusion (RRF): Industry-standard fusion algorithm
-    - Weighted Voting: Position-based voting with weights
+    融合策略：
+    - 加权分数融合：相关性的线性组合
+    - 排名融合：基于Borda计数的排名聚合
+    - 倒数排名融合（RRF）：行业标准融合算法
+    - 加权投票：基于位置的投票权重
     """
 
     def __init__(self,
@@ -145,51 +145,51 @@ class EnsembleRetriever(BaseRetriever):
         self._validate_configuration()
 ```
 
-### 2. LLM Abstraction Layer
+### 2. 大语言模型抽象层
 
-Clean abstraction supporting multiple LLM providers:
+支持多个LLM提供商的清晰抽象：
 
 ```python
 class BaseLLM(ABC):
     """
-    Abstract base class for all LLM implementations.
+    所有LLM实现的抽象基类。
 
-    Design Considerations:
-    - Synchronous and asynchronous interfaces
-    - Streaming response support
-    - Token usage tracking
-    - Error handling with retry logic
-    - Configurable temperature and parameters
+    设计考虑：
+    - 同步和异步接口
+    - 流式响应支持
+    - Token使用跟踪
+    - 带重试逻辑的错误处理
+    - 可配置的温度和参数
     """
 
     @abstractmethod
     def generate(self, prompt: str, **kwargs) -> LLMResult:
-        """Generate response with full control over parameters"""
+        """生成具有完全参数控制的响应"""
 
     @abstractmethod
     async def agenerate(self, prompt: str, **kwargs) -> LLMResult:
-        """Asynchronous generation for concurrent processing"""
+        """用于并发处理的异步生成"""
 
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
-        """Streaming response for real-time applications"""
+        """实时应用的流式响应"""
         return self._stream_generator(prompt, **kwargs)
 ```
 
-### 3. Memory Management System
+### 3. 记忆管理系统
 
-Sophisticated memory management with multiple strategies:
+具有多种策略的精密记忆管理：
 
 ```python
 class ConversationBufferMemory(BaseMemory):
     """
-    Comprehensive conversation memory with multiple storage strategies.
+    具有多种存储策略的全面对话记忆。
 
-    Features:
-    - Sliding window with configurable size
-    - Token-based budgeting
-    - Semantic summarization for long conversations
-    - Persistent storage backends
-    - Conversation analytics
+    特性：
+    - 可配置大小的滑动窗口
+    - 基于Token的预算
+    - 长对话的语义摘要
+    - 持久化存储后端
+    - 对话分析
     """
 
     def __init__(self,
@@ -202,14 +202,14 @@ class ConversationBufferMemory(BaseMemory):
         self._conversation_analytics = ConversationAnalytics()
 ```
 
-## 🎨 Design Patterns
+## 🎨 设计模式
 
-### 1. Strategy Pattern
-Used extensively for interchangeable algorithms:
+### 1. 策略模式
+广泛用于可互换算法：
 
 ```python
 class SearchStrategy(ABC):
-    """Abstract strategy for different search algorithms"""
+    """不同搜索算法的抽象策略"""
 
     @abstractmethod
     def search(self, query: str, documents: List[Document]) -> List[RetrievedDocument]:
@@ -217,21 +217,21 @@ class SearchStrategy(ABC):
 
 class TFIDFStrategy(SearchStrategy):
     def search(self, query: str, documents: List[Document]) -> List[RetrievedDocument]:
-        # TF-IDF implementation
+        # TF-IDF实现
         pass
 
 class BM25Strategy(SearchStrategy):
     def search(self, query: str, documents: List[Document]) -> List[RetrievedDocument]:
-        # BM25 implementation with k1 and b parameters
+        # 带k1和b参数的BM25实现
         pass
 ```
 
-### 2. Factory Pattern
-For component creation and configuration:
+### 2. 工厂模式
+用于组件创建和配置：
 
 ```python
 class RetrieverFactory:
-    """Factory for creating different types of retrievers"""
+    """创建不同类型检索器的工厂"""
 
     @staticmethod
     def create_retriever(retriever_type: str, **kwargs) -> BaseRetriever:
@@ -242,15 +242,15 @@ class RetrieverFactory:
         elif retriever_type == "ensemble":
             return EnsembleRetriever(**kwargs)
         else:
-            raise ValueError(f"Unknown retriever type: {retriever_type}")
+            raise ValueError(f"未知的检索器类型: {retriever_type}")
 ```
 
-### 3. Observer Pattern
-For logging and monitoring:
+### 3. 观察者模式
+用于日志记录和监控：
 
 ```python
 class RetrieverObserver(ABC):
-    """Observer interface for retrieval events"""
+    """检索事件的观察者接口"""
 
     @abstractmethod
     def on_retrieval_start(self, query: str, config: RetrievalConfig):
@@ -261,7 +261,7 @@ class RetrieverObserver(ABC):
         pass
 
 class PerformanceObserver(RetrieverObserver):
-    """Observer that tracks performance metrics"""
+    """跟踪性能指标的观察者"""
 
     def on_retrieval_start(self, query: str, config: RetrievalConfig):
         self._start_time = time.time()
@@ -271,15 +271,15 @@ class PerformanceObserver(RetrieverObserver):
         self._metrics.record_retrieval(duration, len(result.documents))
 ```
 
-### 4. Template Method Pattern
-For common processing pipelines:
+### 4. 模板方法模式
+用于通用处理流水线：
 
 ```python
 class BaseProcessor(ABC):
-    """Template method pattern for processing pipelines"""
+    """处理流水线的模板方法模式"""
 
     def process(self, input_data: Any) -> Any:
-        # Template method defining the algorithm structure
+        # 定义算法结构的模板方法
         validated_data = self.validate_input(input_data)
         processed_data = self.process_core(validated_data)
         return self.format_output(processed_data)
@@ -289,20 +289,20 @@ class BaseProcessor(ABC):
         pass
 
     def validate_input(self, input_data: Any) -> Any:
-        # Common validation logic
+        # 通用验证逻辑
         return input_data
 
     def format_output(self, processed_data: Any) -> Any:
-        # Common formatting logic
+        # 通用格式化逻辑
         return processed_data
 ```
 
-### 5. Chain of Responsibility
-For processing pipelines:
+### 5. 责任链模式
+用于处理流水线：
 
 ```python
 class ProcessingStep(ABC):
-    """Chain of responsibility for processing steps"""
+    """处理步骤的责任链"""
 
     def __init__(self):
         self._next_step: Optional[ProcessingStep] = None
@@ -319,27 +319,27 @@ class ProcessingStep(ABC):
         return response
 ```
 
-## ⚡ Technical Deep Dive
+## ⚡ 技术深度解析
 
-### 1. Advanced Retrieval Algorithms
+### 1. 高级检索算法
 
-#### BM25 Implementation
+#### BM25实现
 ```python
 def _calculate_bm25_score(self, query_terms: List[str], doc_id: str) -> float:
     """
-    BM25 scoring algorithm with k1 and b parameters.
+    带k1和b参数的BM25评分算法。
 
     BM25(q,d) = Σ IDF(qi) * (f(qi,d) * (k1+1)) / (f(qi,d) + k1 * (1-b+b*|d|/avgdl))
 
-    Where:
-    - f(qi,d): frequency of term qi in document d
-    - |d|: length of document d in words
-    - avgdl: average document length in the collection
-    - k1: controls term frequency scaling (typically 1.2-2.0)
-    - b: controls document length normalization (typically 0.75)
+    其中：
+    - f(qi,d): 词项qi在文档d中的频率
+    - |d|: 文档d的长度（词数）
+    - avgdl: 集合中文档的平均长度
+    - k1: 控制词频饱和度（通常1.2-2.0）
+    - b: 控制文档长度归一化（通常0.75）
     """
-    k1 = 1.2  # Term frequency saturation parameter
-    b = 0.75  # Length normalization parameter
+    k1 = 1.2  # 词频饱和参数
+    b = 0.75  # 长度归一化参数
 
     score = 0.0
     doc_length = len(self._document_terms[doc_id])
@@ -350,7 +350,7 @@ def _calculate_bm25_score(self, query_terms: List[str], doc_id: str) -> float:
             tf = self._term_frequencies[term][doc_id]
             idf = self._calculate_idf(term)
 
-            # BM25 formula
+            # BM25公式
             numerator = tf * (k1 + 1)
             denominator = tf + k1 * (1 - b + b * (doc_length / avg_doc_length))
             score += idf * (numerator / denominator)
@@ -358,21 +358,21 @@ def _calculate_bm25_score(self, query_terms: List[str], doc_id: str) -> float:
     return score
 ```
 
-#### MMR (Maximal Marginal Relevance)
+#### MMR（最大边界相关性）
 ```python
 def _mmr_rerank(self,
                 candidates: List[RetrievedDocument],
                 query_embedding: List[float],
                 lambda_param: float) -> List[RetrievedDocument]:
     """
-    Maximal Marginal Relevance for balancing relevance and diversity.
+    平衡相关性和多样性的最大边界相关性。
 
     MMR = arg max_{Di ∈ R\Q} [ λ * sim(Di, Q) - (1-λ) * max_{Dj ∈ Q} sim(Di, Dj) ]
 
-    Where:
-    - λ: controls balance between relevance and diversity
-    - sim(Di, Q): similarity between document Di and query Q
-    - sim(Di, Dj): similarity between documents Di and Dj
+    其中：
+    - λ: 控制相关性和多样性之间的平衡
+    - sim(Di, Q): 文档Di和查询Q之间的相似度
+    - sim(Di, Dj): 文档Di和Dj之间的相似度
     """
     if not candidates:
         return []
@@ -380,7 +380,7 @@ def _mmr_rerank(self,
     selected = []
     remaining = candidates.copy()
 
-    # Select the most relevant document first
+    # 首先选择最相关的文档
     first_doc = max(remaining, key=lambda d: d.relevance_score)
     selected.append(first_doc)
     remaining.remove(first_doc)
@@ -390,10 +390,10 @@ def _mmr_rerank(self,
         best_score = float('-inf')
 
         for doc in remaining:
-            # Relevance component
+            # 相关性组件
             relevance = doc.relevance_score
 
-            # Diversity component (max similarity to selected documents)
+            # 多样性组件（与已选文档的最大相似度）
             max_similarity = 0.0
             doc_embedding = self._get_document_embedding(doc.id)
 
@@ -402,7 +402,7 @@ def _mmr_rerank(self,
                 similarity = self._cosine_similarity(doc_embedding, selected_embedding)
                 max_similarity = max(max_similarity, similarity)
 
-            # MMR score
+            # MMR分数
             mmr_score = lambda_param * relevance - (1 - lambda_param) * max_similarity
 
             if mmr_score > best_score:
@@ -416,33 +416,33 @@ def _mmr_rerank(self,
     return selected
 ```
 
-### 2. Vector Operations and Optimization
+### 2. 向量操作和优化
 
-#### Efficient Vector Similarity
+#### 高效向量相似度
 ```python
 class VectorOperations:
-    """High-performance vector operations with NumPy optimization"""
+    """使用NumPy优化的高性能向量操作"""
 
     @staticmethod
     @lru_cache(maxsize=1024)
     def cosine_similarity_cached(vec1_id: str, vec2_id: str,
                                vector_store: 'VectorStore') -> float:
-        """Cached cosine similarity computation"""
+        """缓存的余弦相似度计算"""
         vec1 = vector_store.get_vector(vec1_id)
         vec2 = vector_store.get_vector(vec2_id)
         return VectorOperations.cosine_similarity(vec1, vec2)
 
     @staticmethod
     def cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
-        """Optimized cosine similarity using NumPy"""
+        """使用NumPy优化的余弦相似度"""
         if not vec1 or not vec2 or len(vec1) != len(vec2):
             return 0.0
 
-        # Convert to NumPy arrays for vectorized operations
+        # 转换为NumPy数组进行向量化操作
         a = np.array(vec1, dtype=np.float32)
         b = np.array(vec2, dtype=np.float32)
 
-        # Vectorized computation
+        # 向量化计算
         dot_product = np.dot(a, b)
         norm_a = np.linalg.norm(a)
         norm_b = np.linalg.norm(b)
@@ -455,19 +455,19 @@ class VectorOperations:
     @staticmethod
     def batch_cosine_similarity(query_vec: List[float],
                                doc_vectors: List[List[float]]) -> List[float]:
-        """Batch computation of cosine similarities"""
+        """余弦相似度的批量计算"""
         if not doc_vectors:
             return []
 
         query_array = np.array(query_vec, dtype=np.float32)
         doc_matrix = np.array(doc_vectors, dtype=np.float32)
 
-        # Vectorized batch computation
+        # 向量化批量计算
         dot_products = np.dot(doc_matrix, query_array)
         doc_norms = np.linalg.norm(doc_matrix, axis=1)
         query_norm = np.linalg.norm(query_array)
 
-        # Handle zero vectors
+        # 处理零向量
         valid_mask = (doc_norms > 0) & (query_norm > 0)
         similarities = np.zeros(len(doc_vectors))
         similarities[valid_mask] = dot_products[valid_mask] / (doc_norms[valid_mask] * query_norm)
@@ -475,46 +475,46 @@ class VectorOperations:
         return similarities.tolist()
 ```
 
-### 3. Memory Management and Caching
+### 3. 内存管理和缓存
 
-#### Multi-Level Caching Strategy
+#### 多级缓存策略
 ```python
 class MultiLevelCache:
     """
-    Hierarchical caching system with L1 (memory), L2 (disk), and L3 (distributed) levels.
+    具有L1（内存）、L2（磁盘）和L3（分布式）层级的分层缓存系统。
     """
 
     def __init__(self,
                  l1_size: int = 1000,
                  l2_size: int = 10000,
                  l3_backend: Optional[CacheBackend] = None):
-        self._l1_cache = LRUCache(maxsize=l1_size)  # Hot data
-        self._l2_cache = LRUCache(maxsize=l2_size)  # Warm data
-        self._l3_backend = l3_backend  # Cold data
+        self._l1_cache = LRUCache(maxsize=l1_size)  # 热数据
+        self._l2_cache = LRUCache(maxsize=l2_size)  # 温数据
+        self._l3_backend = l3_backend  # 冷数据
 
     async def get(self, key: str) -> Optional[Any]:
-        """Get value with cache hierarchy traversal"""
-        # L1 Cache (fastest)
+        """缓存层次遍历获取值"""
+        # L1缓存（最快）
         if key in self._l1_cache:
             return self._l1_cache[key]
 
-        # L2 Cache
+        # L2缓存
         if key in self._l2_cache:
             value = self._l2_cache[key]
-            self._l1_cache[key] = value  # Promote to L1
+            self._l1_cache[key] = value  # 提升到L1
             return value
 
-        # L3 Cache (slowest)
+        # L3缓存（最慢）
         if self._l3_backend:
             value = await self._l3_backend.get(key)
             if value is not None:
-                self._l2_cache[key] = value  # Promote to L2
+                self._l2_cache[key] = value  # 提升到L2
                 return value
 
         return None
 
     async def set(self, key: str, value: Any, ttl: Optional[int] = None):
-        """Set value with cache propagation"""
+        """缓存传播设置值"""
         self._l1_cache[key] = value
         self._l2_cache[key] = value
 
@@ -522,12 +522,12 @@ class MultiLevelCache:
             await self._l3_backend.set(key, value, ttl)
 ```
 
-### 4. Concurrency and Async Processing
+### 4. 并发和异步处理
 
-#### Async Batch Processing
+#### 异步批处理
 ```python
 class BatchProcessor:
-    """High-performance batch processing with asyncio"""
+    """使用asyncio的高性能批处理"""
 
     def __init__(self, batch_size: int = 32, max_concurrency: int = 10):
         self.batch_size = batch_size
@@ -536,36 +536,36 @@ class BatchProcessor:
     async def process_documents(self,
                               documents: List[Document],
                               processor: Callable[[Document], Awaitable[Any]]) -> List[Any]:
-        """Process documents in batches with controlled concurrency"""
+        """受控并发批处理文档"""
         results = []
 
-        # Split into batches
+        # 分割成批次
         batches = [documents[i:i + self.batch_size]
                   for i in range(0, len(documents), self.batch_size)]
 
-        # Process batches concurrently
+        # 并发处理批次
         async def process_batch(batch: List[Document]) -> List[Any]:
             async with self.semaphore:
                 tasks = [processor(doc) for doc in batch]
                 return await asyncio.gather(*tasks, return_exceptions=True)
 
-        # Execute all batches
+        # 执行所有批次
         batch_results = await asyncio.gather(*[process_batch(batch) for batch in batches])
 
-        # Flatten results
+        # 展平结果
         for batch_result in batch_results:
             for result in batch_result:
                 if not isinstance(result, Exception):
                     results.append(result)
                 else:
-                    logger.error(f"Processing error: {result}")
+                    logger.error(f"处理错误: {result}")
 
         return results
 ```
 
-### 5. Type System and Validation
+### 5. 类系统和验证
 
-#### Pydantic Models with Custom Validators
+#### 带自定义验证器的Pydantic模型
 ```python
 from pydantic import BaseModel, Field, validator, root_validator
 from typing import List, Dict, Any, Optional, Union
@@ -573,85 +573,85 @@ import numpy as np
 
 class RetrievalConfig(BaseModel):
     """
-    Comprehensive retrieval configuration with validation.
+    带验证的全面检索配置。
     """
 
-    # Core parameters
-    top_k: int = Field(default=5, ge=1, le=100, description="Number of documents to retrieve")
+    # 核心参数
+    top_k: int = Field(default=5, ge=1, le=100, description="检索的文档数量")
     score_threshold: Optional[float] = Field(default=None, ge=0.0, le=1.0,
-                                            description="Minimum similarity score")
+                                            description="最小相似度分数")
     search_type: str = Field(default="similarity",
                            regex="^(similarity|mmr|hybrid|tfidf|bm25)$",
-                           description="Search algorithm type")
+                           description="搜索算法类型")
 
-    # MMR parameters
+    # MMR参数
     mmr_lambda: float = Field(default=0.5, ge=0.0, le=1.0,
-                             description="MMR diversity parameter")
+                             description="MMR多样性参数")
     fetch_k: int = Field(default=20, ge=1, le=1000,
-                        description="Number of candidates for MMR")
+                        description="MMR候选文档数量")
 
-    # Performance parameters
-    enable_caching: bool = Field(default=True, description="Enable result caching")
+    # 性能参数
+    enable_caching: bool = Field(default=True, description="启用结果缓存")
     cache_ttl: Optional[float] = Field(default=300.0, gt=0,
-                                       description="Cache TTL in seconds")
+                                       description="缓存TTL（秒）")
     batch_size: int = Field(default=32, ge=1, le=256,
-                           description="Batch processing size")
+                           description="批处理大小")
 
-    # Filtering parameters
+    # 过滤参数
     filter_dict: Dict[str, Any] = Field(default_factory=dict,
-                                        description="Metadata filters")
+                                        description="元数据过滤器")
 
     @validator('top_k')
     def validate_top_k(cls, v):
         if v <= 0:
-            raise ValueError('top_k must be positive')
+            raise ValueError('top_k必须为正数')
         return v
 
     @validator('mmr_lambda')
     def validate_mmr_lambda(cls, v):
         if not 0 <= v <= 1:
-            raise ValueError('mmr_lambda must be between 0 and 1')
+            raise ValueError('mmr_lambda必须在0和1之间')
         return v
 
     @root_validator
     def validate_consistency(cls, values):
-        """Validate configuration consistency"""
+        """验证配置一致性"""
         search_type = values.get('search_type', '')
         mmr_lambda = values.get('mmr_lambda', 0.5)
 
         if search_type == 'mmr' and not (0 < mmr_lambda < 1):
-            raise ValueError('mmr_lambda must be between 0 and 1 for MMR search')
+            raise ValueError('MMR搜索时mmr_lambda必须在0和1之间')
 
         return values
 ```
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Installation
+### 安装
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/your-username/langchain-impl.git
 cd langchain-impl
 
-# Create virtual environment
+# 创建虚拟环境
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dependencies
+# 安装依赖
 pip install -r requirements.txt
 
-# Run tests to verify installation
+# 运行测试验证安装
 pytest
 ```
 
-### Basic Usage Examples
+### 基础使用示例
 
-#### 1. Simple Document Retrieval
+#### 1. 简单文档检索
 ```python
 from my_langchain.retrieval import DocumentRetriever, Document, RetrievalConfig
 
-# Create retriever with custom configuration
+# 创建带自定义配置的检索器
 config = RetrievalConfig(
     top_k=5,
     search_type="bm25",
@@ -659,56 +659,56 @@ config = RetrievalConfig(
 )
 retriever = DocumentRetriever(config=config)
 
-# Add documents
+# 添加文档
 documents = [
     Document(
-        content="Python is a high-level programming language with dynamic semantics.",
+        content="Python是一种具有动态语义的高级编程语言。",
         metadata={"source": "wikipedia", "category": "programming"}
     ),
     Document(
-        content="Machine learning is a subset of artificial intelligence.",
+        content="机器学习是人工智能的一个子集。",
         metadata={"source": "textbook", "category": "ai"}
     ),
     Document(
-        content="Deep learning uses neural networks with multiple layers.",
+        content="深度学习使用多层神经网络。",
         metadata={"source": "research", "category": "ai"}
     )
 ]
 
 doc_ids = retriever.add_documents(documents)
-print(f"Added {len(doc_ids)} documents")
+print(f"已添加 {len(doc_ids)} 个文档")
 
-# Perform retrieval
-result = retriever.retrieve("neural networks")
-print(f"Found {len(result.documents)} documents in {result.search_time:.4f}s")
+# 执行检索
+result = retriever.retrieve("神经网络")
+print(f"在 {result.search_time:.4f}s 内找到 {len(result.documents)} 个文档")
 
 for i, doc in enumerate(result.documents, 1):
-    print(f"{i}. Score: {doc.relevance_score:.3f}")
-    print(f"   Content: {doc.content}")
-    print(f"   Source: {doc.metadata.get('source', 'Unknown')}")
+    print(f"{i}. 分数: {doc.relevance_score:.3f}")
+    print(f"   内容: {doc.content}")
+    print(f"   来源: {doc.metadata.get('source', '未知')}")
 ```
 
-#### 2. Advanced Vector Retrieval with MMR
+#### 2. 带MMR的高级向量检索
 ```python
 from my_langchain.retrieval import VectorRetriever
 from my_langchain.embeddings import MockEmbedding
 from my_langchain.vectorstores import InMemoryVectorStore
 from my_langchain.vectorstores.types import VectorStoreConfig
 
-# Create vector store with configuration
+# 创建带配置的向量存储
 vector_config = VectorStoreConfig(
     dimension=384,
     metric="cosine"
 )
 vector_store = InMemoryVectorStore(config=vector_config)
 
-# Create embedding model
+# 创建嵌入模型
 embedding_model = MockEmbedding(embedding_dimension=384)
 
-# Create vector retriever with MMR
+# 创建带MMR的向量检索器
 config = RetrievalConfig(
     search_type="mmr",
-    mmr_lambda=0.7,  # Higher diversity
+    mmr_lambda=0.7,  # 更高多样性
     top_k=3
 )
 retriever = VectorRetriever(
@@ -717,26 +717,26 @@ retriever = VectorRetriever(
     config=config
 )
 
-# Add documents (will be automatically embedded)
+# 添加文档（将自动嵌入）
 retriever.add_documents(documents)
 
-# Perform semantic retrieval with diversity
-result = retriever.retrieve("artificial intelligence and neural networks")
-print(f"Retrieval method: {result.retrieval_method}")
-print(f"Diverse results with MMR (λ={config.mmr_lambda}):")
+# 执行带多样性的语义检索
+result = retriever.retrieve("人工智能和神经网络")
+print(f"检索方法: {result.retrieval_method}")
+print(f"MMR多样性结果 (λ={config.mmr_lambda}):")
 
 for i, doc in enumerate(result.documents, 1):
-    print(f"{i}. Score: {doc.relevance_score:.3f}")
-    print(f"   Content: {doc.content}")
+    print(f"{i}. 分数: {doc.relevance_score:.3f}")
+    print(f"   内容: {doc.content}")
     if doc.additional_info:
-        print(f"   Additional info: {doc.additional_info}")
+        print(f"   附加信息: {doc.additional_info}")
 ```
 
-#### 3. Ensemble Retrieval with Multiple Strategies
+#### 3. 多策略集成检索
 ```python
 from my_langchain.retrieval import EnsembleRetriever
 
-# Create multiple retrievers
+# 创建多个检索器
 doc_retriever = DocumentRetriever(config=RetrievalConfig(search_type="bm25"))
 vector_retriever = VectorRetriever(
     embedding_model=embedding_model,
@@ -744,181 +744,181 @@ vector_retriever = VectorRetriever(
     config=RetrievalConfig(search_type="similarity")
 )
 
-# Add documents to all retrievers
+# 向所有检索器添加文档
 for retriever in [doc_retriever, vector_retriever]:
     retriever.add_documents(documents)
 
-# Create ensemble with custom fusion strategy
+# 创建带自定义融合策略的集成检索器
 ensemble = EnsembleRetriever(
     retrievers=[doc_retriever, vector_retriever],
-    weights=[0.3, 0.7],  # Favor vector retrieval
+    weights=[0.3, 0.7],  # 偏向向量检索
     fusion_strategy="reciprocal_rank",
     config=RetrievalConfig(top_k=5)
 )
 
-# Perform ensemble retrieval
-result = ensemble.retrieve("programming languages")
+# 执行集成检索
+result = ensemble.retrieve("编程语言")
 
-# Compare individual retriever performance
-comparison = ensemble.compare_retrievers("programming languages")
-print("Retriever Comparison:")
+# 比较各个检索器的性能
+comparison = ensemble.compare_retrievers("编程语言")
+print("检索器比较:")
 for name, comp_result in comparison.items():
-    print(f"{name}: {len(comp_result.documents)} results, "
-          f"avg_score: {comp_result.get_average_score():.3f}")
+    print(f"{name}: {len(comp_result.documents)} 个结果, "
+          f"平均分数: {comp_result.get_average_score():.3f}")
 
-print(f"\nEnsemble result: {len(result.documents)} documents")
+print(f"\n集成结果: {len(result.documents)} 个文档")
 for i, doc in enumerate(result.documents, 1):
     source_info = doc.additional_info.get("source_retrievers", [])
-    print(f"{i}. Score: {doc.relevance_score:.3f} (from: {', '.join(source_info)})")
-    print(f"   Content: {doc.content}")
+    print(f"{i}. 分数: {doc.relevance_score:.3f} (来源: {', '.join(source_info)})")
+    print(f"   内容: {doc.content}")
 ```
 
-#### 4. Chain Composition with Memory
+#### 4. 带记忆的链组合
 ```python
 from my_langchain.chains import LLMChain
 from my_langchain.prompts import PromptTemplate
 from my_langchain.memory import ConversationBufferMemory
 from my_langchain.llms import MockLLM
 
-# Create memory with conversation history
+# 创建带对话历史的记忆
 memory = ConversationBufferMemory(
     max_tokens=2000,
     strategy="sliding_window"
 )
 
-# Create prompt template
+# 创建提示词模板
 prompt = PromptTemplate(
-    template="""You are a helpful assistant. Answer the question based on the context.
+    template="""你是一个有用的助手。基于上下文回答问题。
 
-Context: {context}
+上下文: {context}
 
-Conversation History:
+对话历史:
 {history}
 
-Question: {question}
+问题: {question}
 
-Answer:""",
+回答:""",
     input_variables=["context", "history", "question"]
 )
 
-# Create LLM
+# 创建LLM
 llm = MockLLM(responses=[
-    "Based on the context, Python is indeed a programming language.",
-    "The history shows we were discussing programming languages.",
-    "According to the documents, neural networks are used in deep learning."
+    "基于上下文，Python确实是一种编程语言。",
+    "历史显示我们正在讨论编程语言。",
+    "根据文档，神经网络用于深度学习。"
 ])
 
-# Create chain
+# 创建链
 chain = LLMChain(
     llm=llm,
     prompt=prompt,
     memory=memory
 )
 
-# Execute chain with retrieval context
+# 使用检索上下文执行链
 context = "\n".join([doc.content for doc in result.documents[:2]])
-question = "What is Python?"
+question = "什么是Python？"
 
 response = chain.run(
     context=context,
     question=question
 )
 
-print(f"Question: {question}")
-print(f"Response: {response}")
+print(f"问题: {question}")
+print(f"回答: {response}")
 ```
 
-## 📚 API Reference
+## 📚 API参考
 
-### Retrieval System API
+### 检索系统API
 
 #### DocumentRetriever
 ```python
 class DocumentRetriever(BaseRetriever):
-    """Traditional information retrieval with TF-IDF and BM25"""
+    """使用TF-IDF和BM25的传统信息检索"""
 
     def __init__(self, config: Optional[RetrievalConfig] = None):
-        """Initialize with optional configuration"""
+        """使用可选配置初始化"""
 
     def add_documents(self, documents: List[Document]) -> List[str]:
-        """Add documents and return document IDs"""
+        """添加文档并返回文档ID"""
 
     def retrieve(self, query: str) -> RetrievalResult:
-        """Retrieve documents for query"""
+        """为查询检索文档"""
 
     def get_term_statistics(self) -> Dict[str, Any]:
-        """Get term frequency and document statistics"""
+        """获取词频和文档统计"""
 
     def search_by_term(self, term: str) -> List[str]:
-        """Find documents containing specific term"""
+        """查找包含特定词项的文档"""
 ```
 
 #### VectorRetriever
 ```python
 class VectorRetriever(BaseRetriever):
-    """Semantic retrieval using vector embeddings"""
+    """使用向量嵌入的语义检索"""
 
     def __init__(self,
                  embedding_model: EmbeddingModel,
                  vector_store: VectorStore,
                  config: Optional[RetrievalConfig] = None):
-        """Initialize with embedding model and vector store"""
+        """使用嵌入模型和向量存储初始化"""
 
     def add_documents(self, documents: List[Document]) -> List[str]:
-        """Add documents with automatic embedding"""
+        """添加文档并自动嵌入"""
 
     def retrieve(self, query: str) -> RetrievalResult:
-        """Retrieve using semantic similarity"""
+        """使用语义相似度检索"""
 
     def get_embedding_stats(self) -> Dict[str, Any]:
-        """Get embedding and cache statistics"""
+        """获取嵌入和缓存统计"""
 
     def clear_cache(self):
-        """Clear embedding cache"""
+        """清空嵌入缓存"""
 ```
 
 #### EnsembleRetriever
 ```python
 class EnsembleRetriever(BaseRetriever):
-    """Fusion of multiple retrieval strategies"""
+    """多种检索策略的融合"""
 
     def __init__(self,
                  retrievers: List[BaseRetriever],
                  weights: Optional[List[float]] = None,
                  fusion_strategy: str = "weighted_score"):
-        """Initialize with retrievers and fusion strategy"""
+        """使用检索器和融合策略初始化"""
 
     def compare_retrievers(self, query: str) -> Dict[str, RetrievalResult]:
-        """Compare results from all retrievers"""
+        """比较所有检索器的结果"""
 
     def get_ensemble_stats(self) -> Dict[str, Any]:
-        """Get ensemble statistics and performance metrics"""
+        """获取集成统计和性能指标"""
 
     def set_fusion_strategy(self, strategy: str):
-        """Change fusion strategy at runtime"""
+        """运行时更改融合策略"""
 ```
 
-### Data Models
+### 数据模型
 
 #### Document
 ```python
 class Document(BaseModel):
-    """Core document model with content and metadata"""
+    """带内容和元数据的核心文档模型"""
     content: str
     metadata: Dict[str, Any] = Field(default_factory=dict)
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
 
     def get_text_snippet(self, max_length: int = 100) -> str:
-        """Get document preview"""
+        """获取文档预览"""
 
     def matches_filter(self, filter_dict: Dict[str, Any]) -> bool:
-        """Check if document matches metadata filters"""
+        """检查文档是否匹配元数据过滤器"""
 ```
 
 #### RetrievalResult
 ```python
 class RetrievalResult(BaseModel):
-    """Comprehensive retrieval result with metadata"""
+    """带元数据的全面检索结果"""
     documents: List[RetrievedDocument]
     query: str
     total_results: int
@@ -927,88 +927,88 @@ class RetrievalResult(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
     def get_top_k(self, k: int) -> List[RetrievedDocument]:
-        """Get top k results"""
+        """获取前k个结果"""
 
     def get_average_score(self) -> float:
-        """Calculate average relevance score"""
+        """计算平均相关性分数"""
 
     def filter_by_metadata(self, key: str, value: Any) -> 'RetrievalResult':
-        """Filter results by metadata"""
+        """按元数据过滤结果"""
 ```
 
-## 🧪 Testing Strategy
+## 🧪 测试策略
 
-### Test Architecture
+### 测试架构
 
-The project employs a comprehensive testing strategy with multiple test types:
+项目采用包含多种测试类型的全面测试策略：
 
 ```python
-# Unit tests for individual components
+# 个别组件的单元测试
 class TestDocumentRetriever:
     def test_add_documents(self):
-        """Test document addition with validation"""
+        """测试带验证的文档添加"""
 
     def test_retrieve_with_filters(self):
-        """Test retrieval with metadata filtering"""
+        """测试带元数据过滤的检索"""
 
     def test_term_statistics(self):
-        """Test term frequency calculations"""
+        """测试词频计算"""
 
-# Integration tests for component interaction
+# 组件交互的集成测试
 class TestEnsembleRetrieval:
     def test_multiple_retrievers(self):
-        """Test ensemble with different retriever types"""
+        """测试不同检索器类型的集成"""
 
     def test_fusion_strategies(self):
-        """Test different fusion algorithms"""
+        """测试不同融合算法"""
 
-# Performance tests
+# 性能测试
 class TestPerformance:
     def test_large_scale_retrieval(self):
-        """Test performance with large document sets"""
+        """测试大数据集的性能"""
 
     def test_memory_usage(self):
-        """Test memory efficiency"""
+        """测试内存效率"""
 ```
 
-### Test Coverage
+### 测试覆盖率
 
-- **Unit Tests**: 90%+ line coverage for all modules
-- **Integration Tests**: End-to-end workflow testing
-- **Performance Tests**: Benchmarking and regression testing
-- **Property-based Testing**: Hypothesis-based testing for edge cases
+- **单元测试**: 所有模块90%+行覆盖率
+- **集成测试**: 端到端工作流测试
+- **性能测试**: 基准测试和回归测试
+- **属性测试**: 基于Hypothesis的边界条件测试
 
-### Running Tests
+### 运行测试
 
 ```bash
-# Run all tests
+# 运行所有测试
 pytest
 
-# Run with coverage
+# 运行带覆盖率的测试
 pytest --cov=my_langchain --cov-report=html
 
-# Run specific test categories
-pytest -m unit      # Unit tests only
-pytest -m integration # Integration tests only
-pytest -m slow      # Performance tests only
+# 运行特定测试类别
+pytest -m unit      # 仅单元测试
+pytest -m integration # 仅集成测试
+pytest -m slow      # 仅性能测试
 
-# Run with specific markers
-pytest -k "retrieval"  # Tests related to retrieval
-pytest -k "ensemble"   # Tests related to ensemble methods
+# 运行带特定标记的测试
+pytest -k "retrieval"  # 检索相关测试
+pytest -k "ensemble"   # 集成方法相关测试
 ```
 
-## 🔍 Performance Optimization
+## 🔍 性能优化
 
-### 1. Caching Strategies
+### 1. 缓存策略
 
-#### Multi-Level Caching
+#### 多级缓存
 ```python
-# L1: In-memory cache for hot data
+# L1: 热数据的内存缓存
 @lru_cache(maxsize=1000)
 def cached_embedding(text: str) -> List[float]:
     return embedding_model.embed(text)
 
-# L2: Disk-based cache for warm data
+# L2: 温数据的磁盘缓存
 class DiskCache:
     def __init__(self, cache_dir: str):
         self.cache_dir = Path(cache_dir)
@@ -1021,28 +1021,28 @@ class DiskCache:
         return None
 ```
 
-### 2. Batch Processing
+### 2. 批处理
 
-#### Vectorized Operations
+#### 向量化操作
 ```python
 def batch_cosine_similarity(query_vec: np.ndarray,
                            doc_vectors: np.ndarray) -> np.ndarray:
-    """Vectorized similarity computation"""
-    # Normalize vectors once
+    """向量化相似度计算"""
+    # 一次性归一化向量
     query_norm = np.linalg.norm(query_vec)
     doc_norms = np.linalg.norm(doc_vectors, axis=1, keepdims=True)
 
-    # Vectorized dot product
+    # 向量化点积
     similarities = np.dot(doc_vectors, query_vec) / (doc_norms.flatten() * query_norm)
     return similarities
 ```
 
-### 3. Memory Management
+### 3. 内存管理
 
-#### Lazy Loading
+#### 懒加载
 ```python
 class LazyDocumentLoader:
-    """Load documents only when needed"""
+    """仅在需要时加载文档"""
 
     def __init__(self, document_paths: List[str]):
         self.document_paths = document_paths
@@ -1054,73 +1054,72 @@ class LazyDocumentLoader:
         return self._loaded_documents[doc_id]
 ```
 
-### 4. Concurrent Processing
+### 4. 并发处理
 
-#### Async Implementation
+#### 异步实现
 ```python
 async def parallel_retrieval(query: str,
                             retrievers: List[BaseRetriever]) -> List[RetrievalResult]:
-    """Run retrieval in parallel"""
+    """并行运行检索"""
     tasks = [retriever.retrieve(query) for retriever in retrievers]
     results = await asyncio.gather(*tasks, return_exceptions=True)
     return [r for r in results if isinstance(r, RetrievalResult)]
 ```
 
-## 🛠️ Development Guide
+## 🛠️ 开发指南
 
-### Code Style and Standards
+### 代码风格和标准
 
-This project follows strict code quality standards:
+项目遵循严格的代码质量标准：
 
 ```python
-# Type hints for all public APIs
+# 所有公共API的类型提示
 def process_documents(documents: List[Document]) -> List[str]:
-    """Process documents and return IDs"""
+    """处理文档并返回ID"""
 
-# Comprehensive docstrings
+# 全面的文档字符串
 class ExampleClass:
     """
-    Brief description of the class.
+    类的简要描述。
 
-    Detailed description spanning multiple lines
-    with specific behavior notes.
+    跨越多行的详细描述，包含特定行为说明。
 
-    Attributes:
-        attribute1: Description of attribute1
-        attribute2: Description of attribute2
+    属性:
+        attribute1: attribute1的描述
+        attribute2: attribute2的描述
 
-    Example:
+    示例:
         >>> obj = ExampleClass()
         >>> result = obj.method()
         >>> print(result)
     """
 
     def method(self) -> str:
-        """Method description with return type"""
+        """带返回类型的方法描述"""
         return "result"
 ```
 
-### Contributing Guidelines
+### 贡献指南
 
-1. **Code Quality**: All code must pass linting and type checking
-2. **Testing**: New features must include comprehensive tests
-3. **Documentation**: Public APIs must have complete documentation
-4. **Performance**: Consider performance implications of changes
+1. **代码质量**: 所有代码必须通过linting和类型检查
+2. **测试**: 新功能必须包含全面测试
+3. **文档**: 公共API必须有完整文档
+4. **性能**: 考虑更改的性能影响
 
-### Development Workflow
+### 开发工作流
 
 ```bash
-# Setup development environment
+# 设置开发环境
 git clone <repository>
 cd langchain-impl
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements-dev.txt
 
-# Install pre-commit hooks
+# 安装pre-commit钩子
 pre-commit install
 
-# Run quality checks
+# 运行质量检查
 black .
 isort .
 flake8 .
@@ -1128,73 +1127,73 @@ mypy my_langchain/
 pytest
 ```
 
-## 📊 Benchmarks
+## 📊 基准测试
 
-### Retrieval Performance
+### 检索性能
 
-| Retriever Type | Dataset Size | Avg Query Time | Precision@10 | Recall@100 |
-|---------------|-------------|----------------|-------------|-----------|
-| DocumentRetriever | 10K docs | 15ms | 0.75 | 0.82 |
-| VectorRetriever | 10K docs | 45ms | 0.82 | 0.88 |
-| EnsembleRetriever | 10K docs | 65ms | 0.85 | 0.91 |
+| 检索器类型 | 数据集大小 | 平均查询时间 | Precision@10 | Recall@100 |
+|-----------|-----------|-------------|-------------|-----------|
+| 文档检索器 | 10K文档 | 15ms | 0.75 | 0.82 |
+| 向量检索器 | 10K文档 | 45ms | 0.82 | 0.88 |
+| 集成检索器 | 10K文档 | 65ms | 0.85 | 0.91 |
 
-### Memory Usage
+### 内存使用
 
-| Component | Memory Usage | Cache Size | Notes |
-|-----------|-------------|------------|-------|
-| DocumentRetriever | 50MB | N/A | Inverted index |
-| VectorRetriever | 200MB | 100MB | Embeddings + vectors |
-| EnsembleRetriever | 300MB | 150MB | Combined retrievers |
+| 组件 | 内存使用 | 缓存大小 | 说明 |
+|------|----------|----------|------|
+| 文档检索器 | 50MB | N/A | 倒排索引 |
+| 向量检索器 | 200MB | 100MB | 嵌入 + 向量 |
+| 集成检索器 | 300MB | 150MB | 组合检索器 |
 
-### Scalability
+### 可扩展性
 
-- **DocumentRetriever**: Scales to 100K+ documents efficiently
-- **VectorRetriever**: Limited by vector store backend
-- **EnsembleRetriever**: Scales with individual retriever limits
+- **文档检索器**: 高效扩展到100K+文档
+- **向量检索器**: 受向量存储后端限制
+- **集成检索器**: 随各个检索器限制扩展
 
-## 🎯 Future Enhancements
+## 🎯 未来增强
 
-### Planned Features
+### 计划功能
 
-1. **Advanced Retrieval Algorithms**
-   - ColBERT-style late interaction
-   - Dense passage retrieval (DPR)
-   - Hierarchical retrieval strategies
+1. **高级检索算法**
+   - ColBERT风格的后期交互
+   - 密集段落检索（DPR）
+   - 分层检索策略
 
-2. **Performance Optimizations**
-   - GPU acceleration for vector operations
-   - Distributed retrieval across multiple nodes
-   - Advanced caching with Redis backend
+2. **性能优化**
+   - 向量操作的GPU加速
+   - 多节点分布式检索
+   - 带Redis后端的高级缓存
 
-3. **Integration Features**
-   - More LLM provider integrations
-   - Streaming response support
-   - Tool calling and function execution
+3. **集成功能**
+   - 更多LLM提供商集成
+   - 流式响应支持
+   - 工具调用和函数执行
 
-4. **Monitoring and Analytics**
-   - Detailed performance metrics
-   - Retrieval quality analytics
-   - A/B testing framework
+4. **监控和分析**
+   - 详细性能指标
+   - 检索质量分析
+   - A/B测试框架
 
-### Architecture Evolution
+### 架构演进
 
-The architecture is designed to evolve with:
+架构设计为可以随以下方面演进：
 
-- **Plugin System**: Dynamic component loading
-- **Configuration Management**: Environment-based configs
-- **Observability**: Comprehensive logging and metrics
-- **Scalability**: Horizontal scaling capabilities
+- **插件系统**: 动态组件加载
+- **配置管理**: 基于环境的配置
+- **可观测性**: 全面的日志和指标
+- **可扩展性**: 水平扩展能力
 
-## 📄 License
+## 📄 许可证
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+本项目采用MIT许可证 - 详见[LICENSE](LICENSE)文件。
 
-## 🤝 Acknowledgments
+## 🤝 致谢
 
-- **LangChain Community**: For inspiration and architectural patterns
-- **Information Retrieval Research**: For underlying algorithms and techniques
-- **Open Source Contributors**: For tools and libraries that make this possible
+- **LangChain社区**: 提供灵感和架构模式
+- **信息检索研究**: 提供底层算法和技术
+- **开源贡献者**: 提供使此项目成为可能的工具和库
 
 ---
 
-**⚡ Built with passion for LLM application development and educational excellence**
+**⚡ 为LLM应用开发和教学卓越而构建**
