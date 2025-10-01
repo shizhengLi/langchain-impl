@@ -3,6 +3,7 @@
 """
 import pytest
 from abc import ABC
+from pydantic import Field
 from my_langchain.base.base import (
     BaseComponent,
     BaseLLM,
@@ -166,9 +167,7 @@ class TestBaseMemory:
         """测试具体记忆实现"""
 
         class ConcreteMemory(BaseMemory):
-            def __init__(self):
-                super().__init__()
-                self.memory = []
+            memory: list = Field(default_factory=list)
 
             def save_context(self, inputs: dict, outputs: dict) -> None:
                 self.memory.append({"inputs": inputs, "outputs": outputs})
@@ -320,10 +319,8 @@ class TestBaseVectorStore:
         """测试具体向量存储实现"""
 
         class ConcreteVectorStore(BaseVectorStore):
-            def __init__(self):
-                super().__init__()
-                self.vectors = []
-                self.texts = []
+            vectors: list = Field(default_factory=list)
+            texts: list = Field(default_factory=list)
 
             def add_vectors(self, vectors: list, texts: list) -> list:
                 ids = [f"id_{len(self.vectors) + i}" for i in range(len(vectors))]
@@ -384,9 +381,7 @@ class TestBaseTextSplitter:
         """测试具体文本分割器实现"""
 
         class ConcreteTextSplitter(BaseTextSplitter):
-            def __init__(self, chunk_size: int = 100):
-                super().__init__()
-                self.chunk_size = chunk_size
+            chunk_size: int = Field(default=100)
 
             def split_text(self, text: str) -> list:
                 chunks = []
@@ -405,7 +400,7 @@ class TestBaseTextSplitter:
         # 测试文本分割
         text = "Hello world! This is a test."
         chunks = splitter.split_text(text)
-        assert len(chunks) == 3  # "Hello", " worl", "d! Th", "is is", " a te", "st."
+        assert len(chunks) == 6  # "Hello", " worl", "d! Th", "is is", " a te", "st."
         assert chunks[0] == "Hello"
 
         # 测试批量分割
@@ -427,13 +422,11 @@ class TestBaseRetriever:
         """测试具体检索器实现"""
 
         class ConcreteRetriever(BaseRetriever):
-            def __init__(self):
-                super().__init__()
-                self.documents = [
-                    {"text": "Python is a programming language", "id": "doc1"},
-                    {"text": "JavaScript is also a programming language", "id": "doc2"},
-                    {"text": "Machine learning is a subset of AI", "id": "doc3"}
-                ]
+            documents: list = Field(default_factory=lambda: [
+                {"text": "Python is a programming language", "id": "doc1"},
+                {"text": "JavaScript is also a programming language", "id": "doc2"},
+                {"text": "Machine learning is a subset of AI", "id": "doc3"}
+            ])
 
             def retrieve(self, query: str, **kwargs) -> list:
                 # 简单的关键词匹配

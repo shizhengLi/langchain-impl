@@ -7,7 +7,7 @@
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Union, AsyncGenerator
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class BaseComponent(ABC, BaseModel):
@@ -17,8 +17,7 @@ class BaseComponent(ABC, BaseModel):
     提供通用的组件功能，如序列化、配置管理等。
     """
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @abstractmethod
     def run(self, *args, **kwargs) -> Any:
@@ -432,6 +431,10 @@ class BaseVectorStore(BaseComponent):
             相似文档列表，包含文档和相似度分数
         """
         pass
+
+    def run(self, query_vector: List[float], k: int = 4) -> List[Dict[str, Any]]:
+        """实现 BaseComponent 的 run 方法"""
+        return self.similarity_search(query_vector, k)
 
 
 class BaseTextSplitter(BaseComponent):
