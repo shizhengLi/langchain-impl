@@ -186,12 +186,24 @@ class MockLLM(BaseLLM):
         prompt_lower = prompt.lower()
 
         if any(word in prompt_lower for word in ["hello", "hi", "你好"]):
-            responses = [
-                "Hello! How can I help you today?",
-                "Hi there! What would you like to know?",
-                "你好！今天我能为你做些什么？",
-                "您好！有什么我可以帮助您的吗？"
-            ]
+            # Check if prompt contains a name (simple pattern matching)
+            import re
+            name_match = re.search(r'hello,\s*([^!?.]+)', prompt_lower) or re.search(r'hi,\s*([^!?.]+)', prompt_lower)
+            if name_match:
+                name = name_match.group(1).strip().title()
+                responses = [
+                    f"Hello {name}! How can I help you today?",
+                    f"Hi {name}! What would you like to know?",
+                    f"你好{name}！今天我能为你做些什么？",
+                    f"您好{name}！有什么我可以帮助您的吗？"
+                ]
+            else:
+                responses = [
+                    "Hello! How can I help you today?",
+                    "Hi there! What would you like to know?",
+                    "你好！今天我能为你做些什么？",
+                    "您好！有什么我可以帮助您的吗？"
+                ]
         elif any(word in prompt_lower for word in ["what", "什么", "how", "如何"]):
             responses = [
                 "That's a great question! Let me think about it...",

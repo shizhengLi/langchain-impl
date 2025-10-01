@@ -5,7 +5,7 @@ Base chain implementation
 
 import time
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from my_langchain.base.base import BaseChain as BaseChainComponent
 from my_langchain.chains.types import (
@@ -93,10 +93,16 @@ class BaseChain(BaseChainComponent):
             # Run the chain
             result = self._run_with_handling(input_dict, config, intermediate_steps)
 
+            # Prepare output for ChainResult (simplify if single output)
+            if isinstance(result, dict) and list(result.keys()) == ["output"]:
+                simplified_result = result["output"]
+            else:
+                simplified_result = result
+
             # Create result object
             execution_time = time.time() - start_time
             chain_result = ChainResult(
-                output=result,
+                output=simplified_result,
                 intermediate_steps=intermediate_steps,
                 metadata={"execution_time": execution_time},
                 execution_time=execution_time
@@ -108,6 +114,9 @@ class BaseChain(BaseChainComponent):
             elif self.config.output_key:
                 return result.get(self.config.output_key, result)
             else:
+                # If result is a dict with single "output" key, return the value
+                if isinstance(result, dict) and list(result.keys()) == ["output"]:
+                    return result["output"]
                 return result
 
         except Exception as e:
@@ -147,10 +156,16 @@ class BaseChain(BaseChainComponent):
             # Run the chain asynchronously
             result = await self._arun_with_handling(input_dict, config, intermediate_steps)
 
+            # Prepare output for ChainResult (simplify if single output)
+            if isinstance(result, dict) and list(result.keys()) == ["output"]:
+                simplified_result = result["output"]
+            else:
+                simplified_result = result
+
             # Create result object
             execution_time = time.time() - start_time
             chain_result = ChainResult(
-                output=result,
+                output=simplified_result,
                 intermediate_steps=intermediate_steps,
                 metadata={"execution_time": execution_time},
                 execution_time=execution_time
@@ -162,6 +177,9 @@ class BaseChain(BaseChainComponent):
             elif self.config.output_key:
                 return result.get(self.config.output_key, result)
             else:
+                # If result is a dict with single "output" key, return the value
+                if isinstance(result, dict) and list(result.keys()) == ["output"]:
+                    return result["output"]
                 return result
 
         except Exception as e:
@@ -287,6 +305,40 @@ class BaseChain(BaseChainComponent):
             Chain output
         """
         return self.run(input)
+
+    def __call__(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Execute the chain (implements abstract method from BaseChainComponent)
+
+        Args:
+            inputs: Input values for the chain
+
+        Returns:
+            Chain execution result as dictionary
+        """
+        result = self.run(inputs)
+        # Convert to dict if needed
+        if isinstance(result, dict):
+            return result
+        else:
+            return {"output": result}
+
+    async def acall(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Execute the chain asynchronously (implements abstract method from BaseChainComponent)
+
+        Args:
+            inputs: Input values for the chain
+
+        Returns:
+            Chain execution result as dictionary
+        """
+        result = await self.arun(inputs)
+        # Convert to dict if needed
+        if isinstance(result, dict):
+            return result
+        else:
+            return {"output": result}
 
     def get_chain_info(self) -> Dict[str, Any]:
         """

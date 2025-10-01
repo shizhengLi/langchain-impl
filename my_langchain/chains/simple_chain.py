@@ -63,14 +63,22 @@ class SimpleChain(BaseChain):
         try:
             # Prepare function arguments
             if self.input_keys:
-                # Use specified input keys
-                func_args = {key: inputs[key] for key in self.input_keys if key in inputs}
+                # Use specified input keys - try as keyword arguments first
+                try:
+                    func_args = {key: inputs[key] for key in self.input_keys if key in inputs}
+                    result = self.func(**func_args)
+                except TypeError:
+                    # If keyword arguments fail, try positional arguments
+                    args = [inputs[key] for key in self.input_keys if key in inputs]
+                    result = self.func(*args)
             else:
                 # Use all inputs as arguments
-                func_args = inputs
-
-            # Execute function
-            result = self.func(**func_args)
+                try:
+                    result = self.func(**inputs)
+                except TypeError:
+                    # Try positional if keyword fails
+                    args = list(inputs.values())
+                    result = self.func(*args)
 
             # Prepare output
             if self.output_keys:
@@ -108,20 +116,45 @@ class SimpleChain(BaseChain):
             Function output
         """
         try:
-            # Prepare function arguments
-            if self.input_keys:
-                func_args = {key: inputs[key] for key in self.input_keys if key in inputs}
-            else:
-                func_args = inputs
-
             # Check if function is async
             import inspect
             if inspect.iscoroutinefunction(self.func):
-                result = await self.func(**func_args)
+                # Prepare function arguments for async function
+                if self.input_keys:
+                    # Try keyword arguments first
+                    try:
+                        func_args = {key: inputs[key] for key in self.input_keys if key in inputs}
+                        result = await self.func(**func_args)
+                    except TypeError:
+                        # Try positional arguments
+                        args = [inputs[key] for key in self.input_keys if key in inputs]
+                        result = await self.func(*args)
+                else:
+                    # Use all inputs as arguments
+                    try:
+                        result = await self.func(**inputs)
+                    except TypeError:
+                        # Try positional if keyword fails
+                        args = list(inputs.values())
+                        result = await self.func(*args)
             else:
                 # Run sync function in thread pool
                 import asyncio
-                result = await asyncio.get_event_loop().run_in_executor(None, self.func, **func_args)
+
+                # Prepare arguments the same way as sync version
+                if self.input_keys:
+                    try:
+                        func_args = {key: inputs[key] for key in self.input_keys if key in inputs}
+                        result = await asyncio.get_event_loop().run_in_executor(None, lambda: self.func(**func_args))
+                    except TypeError:
+                        args = [inputs[key] for key in self.input_keys if key in inputs]
+                        result = await asyncio.get_event_loop().run_in_executor(None, lambda: self.func(*args))
+                else:
+                    try:
+                        result = await asyncio.get_event_loop().run_in_executor(None, lambda: self.func(**inputs))
+                    except TypeError:
+                        args = list(inputs.values())
+                        result = await asyncio.get_event_loop().run_in_executor(None, lambda: self.func(*args))
 
             # Prepare output
             if self.output_keys:
@@ -147,6 +180,48 @@ class SimpleChain(BaseChain):
                 step="simple_chain_arun",
                 cause=e
             )
+
+    def run(self, inputs: Union[Dict[str, Any], str], config: Optional[Dict[str, Any]] = None) -> Any:
+        """
+        Run the simple chain with inputs
+
+        Args:
+            inputs: Input values (can be dict or single value)
+            config: Runtime configuration overrides
+
+        Returns:
+            Simple chain output (returns simplified output for single output)
+        """
+        # Use parent run method
+        result = super().run(inputs, config)
+
+        # If we have a single output key and result is a dict, return the value
+        if self.output_keys and len(self.output_keys) == 1 and isinstance(result, dict):
+            output_key = self.output_keys[0]
+            return result.get(output_key, result)
+
+        return result
+
+    async def arun(self, inputs: Union[Dict[str, Any], str], config: Optional[Dict[str, Any]] = None) -> Any:
+        """
+        Run the simple chain asynchronously with inputs
+
+        Args:
+            inputs: Input values (can be dict or single value)
+            config: Runtime configuration overrides
+
+        Returns:
+            Simple chain output (returns simplified output for single output)
+        """
+        # Use parent arun method
+        result = await super().arun(inputs, config)
+
+        # If we have a single output key and result is a dict, return the value
+        if self.output_keys and len(self.output_keys) == 1 and isinstance(result, dict):
+            output_key = self.output_keys[0]
+            return result.get(output_key, result)
+
+        return result
 
     def _get_input_keys(self) -> List[str]:
         """Get input keys"""

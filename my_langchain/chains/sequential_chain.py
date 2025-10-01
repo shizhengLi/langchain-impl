@@ -207,6 +207,48 @@ class SequentialChain(BaseChain):
             return self.chains[index]
         return None
 
+    def run(self, inputs: Union[Dict[str, Any], str], config: Optional[Dict[str, Any]] = None) -> Any:
+        """
+        Run the sequential chain with inputs
+
+        Args:
+            inputs: Input values (can be dict or single value)
+            config: Runtime configuration overrides
+
+        Returns:
+            Sequential chain output (always returns dict for multi-step chains)
+        """
+        # Normalize inputs to dictionary
+        if isinstance(inputs, dict):
+            input_dict = inputs
+        else:
+            input_key = self.config.input_key or "input"
+            input_dict = {input_key: inputs}
+
+        # Run the internal _run method which already handles the sequential logic
+        return self._run(input_dict)
+
+    async def arun(self, inputs: Union[Dict[str, Any], str], config: Optional[Dict[str, Any]] = None) -> Any:
+        """
+        Run the sequential chain asynchronously with inputs
+
+        Args:
+            inputs: Input values (can be dict or single value)
+            config: Runtime configuration overrides
+
+        Returns:
+            Sequential chain output (always returns dict for multi-step chains)
+        """
+        # Normalize inputs to dictionary
+        if isinstance(inputs, dict):
+            input_dict = inputs
+        else:
+            input_key = self.config.input_key or "input"
+            input_dict = {input_key: inputs}
+
+        # Run the internal _arun method which already handles the sequential logic
+        return await self._arun(input_dict)
+
     def _get_input_keys(self) -> List[str]:
         """Get input keys from the first chain"""
         if self.input_variables:

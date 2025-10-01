@@ -46,8 +46,8 @@ class LLMChain(BaseChain):
             config = ChainConfig(output_key=output_key)
 
         # Validate prompt and LLM compatibility
-        if not prompt.input_variables:
-            raise ValueError("Prompt template must have input variables")
+        # Allow prompts without input variables (for static prompts)
+        # The validation will happen at runtime when trying to format the prompt
 
         super().__init__(
             llm=llm,
@@ -68,7 +68,11 @@ class LLMChain(BaseChain):
             Dictionary with the generated text
         """
         # Format the prompt with inputs
-        formatted_prompt = self.prompt.format(**inputs)
+        if self.prompt.input_variables:
+            formatted_prompt = self.prompt.format(**inputs)
+        else:
+            # Static prompt with no variables
+            formatted_prompt = self.prompt.format()
 
         # Generate response from LLM
         response = self.llm.generate(formatted_prompt)
@@ -87,7 +91,11 @@ class LLMChain(BaseChain):
             Dictionary with the generated text
         """
         # Format the prompt with inputs
-        formatted_prompt = self.prompt.format(**inputs)
+        if self.prompt.input_variables:
+            formatted_prompt = self.prompt.format(**inputs)
+        else:
+            # Static prompt with no variables
+            formatted_prompt = self.prompt.format()
 
         # Generate response from LLM asynchronously
         response = await self.llm.agenerate(formatted_prompt)
@@ -162,6 +170,46 @@ class LLMChain(BaseChain):
         import asyncio
         tasks = [self.arun(inputs) for inputs in inputs_list]
         return await asyncio.gather(*tasks)
+
+    def run(self, inputs: Union[Dict[str, Any], str], config: Optional[Dict[str, Any]] = None) -> Any:
+        """
+        Run the LLM chain with proper string input handling
+
+        Args:
+            inputs: Input values (can be dict or single value)
+            config: Runtime configuration overrides
+
+        Returns:
+            Chain output
+        """
+        if isinstance(inputs, str):
+            # If single string input, map to first prompt variable
+            if self.prompt.input_variables:
+                inputs = {self.prompt.input_variables[0]: inputs}
+            else:
+                inputs = {"input": inputs}
+        elif isinstance(inputs, dict) and not inputs and not self.prompt.input_variables:
+            # Allow empty dict for static prompts
+            pass
+
+        return super().run(inputs, config)
+
+    def _validate_inputs(self, inputs: Dict[str, Any]) -> None:
+        """
+        Override input validation for LLM chains
+
+        Args:
+            inputs: Input values to validate
+
+        Raises:
+            ChainValidationError: If inputs are invalid
+        """
+        # For static prompts (no input variables), allow empty inputs
+        if not self.prompt.input_variables:
+            return
+
+        # Otherwise, use parent validation
+        super()._validate_inputs(inputs)
 
     def _get_input_keys(self) -> List[str]:
         """Get input keys from prompt template"""
