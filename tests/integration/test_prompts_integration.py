@@ -333,7 +333,7 @@ class TestPromptTemplatePerformance:
         templates = []
         for i in range(100):
             template = PromptTemplate(
-                template="Template {i}: Value is {value}",
+                template=f"Template {i}: Value is {{value}}",
                 input_variables=["value"]
             )
             templates.append(template)
