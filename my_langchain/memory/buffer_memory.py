@@ -52,6 +52,28 @@ class ConversationBufferMemory(ChatMessageHistory):
         # Update context buffer
         self._update_context_buffer()
 
+    def add_messages(self, messages: List[Union[ChatMessage, Dict[str, Any]]], **kwargs) -> None:
+        """
+        Add multiple messages to buffer
+
+        Args:
+            messages: List of messages to add
+            **kwargs: Additional parameters
+        """
+        validated_messages = []
+        for msg in messages:
+            validated_msg = self._validate_message(msg)
+            validated_messages.append(validated_msg)
+
+        # Check capacity
+        self._check_capacity(validated_messages)
+
+        # Add messages
+        self._messages.extend(validated_messages)
+
+        # Update context buffer
+        self._update_context_buffer()
+
     def get_memory(self, **kwargs) -> MemoryResult:
         """
         Get current memory state with buffer management

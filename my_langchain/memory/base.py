@@ -10,7 +10,7 @@ from datetime import datetime
 from my_langchain.base.base import BaseComponent
 from my_langchain.memory.types import (
     MemoryConfig, MemoryResult, MemoryContext, MemorySearchResult,
-    ChatMessage, MemoryError, MemoryValidationError
+    ChatMessage, MemoryError, MemoryValidationError, MemoryCapacityError
 )
 from pydantic import ConfigDict, Field
 
@@ -154,7 +154,7 @@ class BaseMemory(BaseComponent):
             MemoryCapacityError: If capacity would be exceeded
         """
         if self.config.max_messages is not None:
-            current_count = len(self.get_memory().messages)
+            current_count = len(self._messages)
             if current_count + len(messages) > self.config.max_messages:
                 raise MemoryCapacityError(
                     f"Would exceed max message limit of {self.config.max_messages}",
