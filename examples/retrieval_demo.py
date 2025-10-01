@@ -4,6 +4,12 @@ Retrieval模块使用示例
 演示了三种检索器的使用方法
 """
 
+import sys
+import os
+
+# 添加项目根目录到路径
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 from my_langchain.retrieval import (
     DocumentRetriever,
     VectorRetriever,
@@ -13,6 +19,7 @@ from my_langchain.retrieval import (
 )
 from my_langchain.embeddings import MockEmbedding
 from my_langchain.vectorstores import InMemoryVectorStore
+from my_langchain.vectorstores.types import VectorStoreConfig
 import time
 
 def create_sample_documents():
@@ -82,7 +89,10 @@ def demo_document_retriever():
 
     for query, search_type in queries:
         print(f"\n🔍 查询: '{query}' (搜索类型: {search_type})")
-        result = retriever.retrieve(query, config=RetrievalConfig(search_type=search_type))
+        # 创建特定配置的检索器
+        config_retriever = DocumentRetriever(config=RetrievalConfig(search_type=search_type))
+        config_retriever.add_documents(documents)
+        result = config_retriever.retrieve(query)
 
         print(f"   检索方法: {result.retrieval_method}")
         print(f"   检索时间: {result.search_time:.4f}秒")
@@ -99,7 +109,8 @@ def demo_vector_retriever():
 
     # 创建组件
     embedding_model = MockEmbedding(embedding_dimension=384)
-    vector_store = InMemoryVectorStore(embedding_dimension=384)
+    vector_config = VectorStoreConfig(dimension=384)
+    vector_store = InMemoryVectorStore(config=vector_config)
 
     # 创建检索器
     retriever = VectorRetriever(
@@ -135,7 +146,14 @@ def demo_vector_retriever():
             score_threshold=0.3
         )
 
-        result = retriever.retrieve(query, config=config)
+        # 创建特定配置的检索器
+        config_retriever = VectorRetriever(
+            embedding_model=embedding_model,
+            vector_store=vector_store,
+            config=config
+        )
+        config_retriever.add_documents(documents)
+        result = config_retriever.retrieve(query)
 
         print(f"   检索方法: {result.retrieval_method}")
         print(f"   检索时间: {result.search_time:.4f}秒")
@@ -158,7 +176,8 @@ def demo_ensemble_retriever():
 
     # 创建向量检索器
     embedding_model = MockEmbedding(embedding_dimension=384)
-    vector_store = InMemoryVectorStore(embedding_dimension=384)
+    vector_config = VectorStoreConfig(dimension=384)
+    vector_store = InMemoryVectorStore(config=vector_config)
     vector_retriever = VectorRetriever(
         embedding_model=embedding_model,
         vector_store=vector_store
@@ -190,9 +209,17 @@ def demo_ensemble_retriever():
     for query in queries:
         print(f"\n🎯 查询: '{query}'")
 
+        # 创建带配置的集成检索器
+        ensemble_with_config = EnsembleRetriever(
+            retrievers=[doc_retriever, vector_retriever],
+            weights=[0.4, 0.6],  # 向量检索权重更高
+            fusion_strategy="weighted_score",
+            config=RetrievalConfig(top_k=3)
+        )
+
         # 执行集成检索
         start_time = time.time()
-        result = ensemble.retrieve(query, config=RetrievalConfig(top_k=3))
+        result = ensemble_with_config.retrieve(query)
         total_time = time.time() - start_time
 
         print(f"   检索方法: {result.retrieval_method}")
@@ -207,7 +234,7 @@ def demo_ensemble_retriever():
 
         # 比较各个检索器的结果
         print(f"\n   🔄 检索器结果对比:")
-        comparison = ensemble.compare_retrievers(query)
+        comparison = ensemble_with_config.compare_retrievers(query)
         for name, comp_result in comparison.items():
             print(f"     {name}: {len(comp_result.documents)} 个结果, "
                   f"平均分数: {comp_result.get_average_score():.3f}")
@@ -237,7 +264,8 @@ def demo_performance_comparison():
     # 测试VectorRetriever
     print("\n🔢 VectorRetriever 性能:")
     embedding_model = MockEmbedding(embedding_dimension=384)
-    vector_store = InMemoryVectorStore(embedding_dimension=384)
+    vector_config = VectorStoreConfig(dimension=384)
+    vector_store = InMemoryVectorStore(config=vector_config)
     vector_retriever = VectorRetriever(
         embedding_model=embedding_model,
         vector_store=vector_store
@@ -290,7 +318,9 @@ def demo_filtering_and_config():
         filter_dict={"type": "programming"},
         top_k=5
     )
-    result = retriever.retrieve("语言", config=config)
+    filter_retriever = DocumentRetriever(config=config)
+    filter_retriever.add_documents(documents)
+    result = filter_retriever.retrieve("语言")
     print(f"   编程类型文档: {len(result.documents)} 个")
     for doc in result.documents:
         print(f"     - {doc.get_text_snippet(40)} ({doc.metadata.get('language', 'Unknown')})")
@@ -300,7 +330,9 @@ def demo_filtering_and_config():
         filter_dict={"field": "AI"},
         top_k=5
     )
-    result = retriever.retrieve("技术", config=config)
+    filter_retriever2 = DocumentRetriever(config=config)
+    filter_retriever2.add_documents(documents)
+    result = filter_retriever2.retrieve("技术")
     print(f"   AI领域文档: {len(result.documents)} 个")
     for doc in result.documents:
         print(f"     - {doc.get_text_snippet(40)} ({doc.metadata.get('type', 'Unknown')})")
@@ -311,7 +343,9 @@ def demo_filtering_and_config():
         score_threshold=0.3,  # 只返回分数大于0.3的结果
         top_k=10
     )
-    result = retriever.retrieve("Python 编程", config=config)
+    filter_retriever3 = DocumentRetriever(config=config)
+    filter_retriever3.add_documents(documents)
+    result = filter_retriever3.retrieve("Python 编程")
     print(f"   高质量结果: {len(result.documents)} 个")
     for doc in result.documents:
         print(f"     - Score: {doc.relevance_score:.3f} | {doc.get_text_snippet(40)}")

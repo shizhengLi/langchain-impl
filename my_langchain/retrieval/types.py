@@ -4,7 +4,7 @@ Types and data structures for retrieval module
 """
 
 from typing import List, Dict, Any, Optional, Union, Callable
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, root_validator
 from dataclasses import dataclass
 import time
 import uuid
@@ -203,6 +203,22 @@ class RetrievalResult(BaseModel):
         if v <= 0:
             raise ValueError('search_time must be positive')
         return v
+
+    @root_validator(skip_on_failure=True)
+    def validate_result_consistency(cls, values):
+        """Validate consistency between documents and total_results"""
+        documents = values.get('documents', [])
+        total_results = values.get('total_results', 0)
+
+        # If we have documents, total_results should match or be greater
+        if documents and total_results < len(documents):
+            raise ValueError('total_results must be >= number of documents')
+
+        # If we have no documents, total_results should be 0
+        if not documents and total_results != 0:
+            raise ValueError('total_results must be 0 when no documents')
+
+        return values
 
     def __len__(self) -> int:
         """Return number of retrieved documents"""

@@ -329,15 +329,14 @@ class TestRetrievalResult:
             retrieval_method="test"
         )
 
-        # Invalid documents (empty)
-        with pytest.raises(ValueError):
-            RetrievalResult(
-                documents=[],
-                query="test",
-                total_results=0,
-                search_time=0.1,
-                retrieval_method="test"
-            )
+        # Valid empty documents (no results found)
+        RetrievalResult(
+            documents=[],
+            query="test",
+            total_results=0,
+            search_time=0.1,
+            retrieval_method="test"
+        )
 
         # Invalid total_results
         with pytest.raises(ValueError):

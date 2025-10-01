@@ -19,6 +19,7 @@ from my_langchain.retrieval import (
 )
 from my_langchain.embeddings import MockEmbedding
 from my_langchain.vectorstores import InMemoryVectorStore
+from my_langchain.vectorstores.types import VectorStoreConfig
 
 def test_document_retriever():
     """测试文档检索器"""
@@ -49,7 +50,8 @@ def test_vector_retriever():
 
     # 创建组件
     embedding_model = MockEmbedding(embedding_dimension=384)
-    vector_store = InMemoryVectorStore(embedding_dimension=384)
+    vector_config = VectorStoreConfig(dimension=384)
+    vector_store = InMemoryVectorStore(config=vector_config)
 
     # 创建检索器
     retriever = VectorRetriever(
@@ -81,7 +83,8 @@ def test_ensemble_retriever():
     doc_retriever = DocumentRetriever()
 
     embedding_model = MockEmbedding(embedding_dimension=384)
-    vector_store = InMemoryVectorStore(embedding_dimension=384)
+    vector_config = VectorStoreConfig(dimension=384)
+    vector_store = InMemoryVectorStore(config=vector_config)
     vector_retriever = VectorRetriever(
         embedding_model=embedding_model,
         vector_store=vector_store
@@ -121,12 +124,14 @@ def test_configuration():
     ]
     retriever.add_documents(documents)
 
-    # 测试过滤
+    # 创建带配置的检索器
     config = RetrievalConfig(
         filter_dict={"type": "programming"},
         top_k=2
     )
-    result = retriever.retrieve("language", config=config)
+    retriever_with_config = DocumentRetriever(config=config)
+    retriever_with_config.add_documents(documents)
+    result = retriever_with_config.retrieve("language")
     assert len(result.documents) <= 2
     assert all(doc.metadata.get("type") == "programming" for doc in result.documents)
 
